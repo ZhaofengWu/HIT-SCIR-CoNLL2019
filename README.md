@@ -17,6 +17,13 @@ CoNLL2019 Shared Task Official Website: <http://mrp.nlpl.eu/>
 
 Total training data is available at [mrp-data].
 
+## Model
+Download model from [google-drive] (CoNLL2019 Submission Version). 
+
+For prediction, please specify the BERT path in `config.json` to import the bert-indexer and bert-embedder. More prediction commands could be found in `bash/predict.sh`.
+
+About BERT version, DM/PSD/UCCA/EDS use cased_L-12_H-768_A-12 (`cased-bert-base`) and AMR uses wwm_cased_L-24_H-1024_A-16 (`wwm-cased-bert-large`).
+
 ## Usage
 
 ### Prepare data
@@ -118,3 +125,4 @@ For further information, please contact <lxdou@ir.hit.edu.cn>, <yxu@ir.hit.edu.c
 
 [mrp-data]: http://mrp.nlpl.eu/index.php?page=4#training "mrp-data"
 [mrp-sample-data]: http://svn.nlpl.eu/mrp/2019/public/sample.tgz "mrp-sample-data"
+[google-drive]: https://drive.google.com/open?id=1SbtqPdNYZWY9m2cDo58tNuzCFtKUMSj1 "google-drive"
