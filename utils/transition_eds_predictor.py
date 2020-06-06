@@ -52,10 +52,7 @@ class EDSParserPredictor(Predictor):
 
         ret_dict_batch = [[] for i in range(len(outputs_batch))]
         for outputs_idx in range(len(outputs_batch)):
-            try:
-                ret_dict_batch[outputs_idx] = eds_trans_outputs_into_mrp(outputs_batch[outputs_idx])
-            except:
-                print('graph_id:' + json.loads(outputs_batch[outputs_idx]["meta_info"])['id'])
+            ret_dict_batch[outputs_idx] = eds_trans_outputs_into_mrp(outputs_batch[outputs_idx])
 
         return sanitize(ret_dict_batch)
 
@@ -226,8 +223,8 @@ def get_carg_value(label, token):
             return value
 
         for value_sp in value.lower().split():
-            if value in month_dict:
-                value = month_dict[month_dict]
+            if value_sp in month_dict:
+                value = month_dict[value_sp]
 
     elif label == 'named':
         # W.D.) -> W.D.
