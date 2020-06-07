@@ -154,7 +154,8 @@ class TransitionParser(Model):
                                         extra={'token': sent_len[sent_idx] - token_idx})
                     else:
                         broken_indices.add(sent_idx)
-        print('Broken indices: ' + str(broken_indices))
+        if len(broken_indices) > 0:
+            print('Broken indices: ' + str(broken_indices))
 
         # init stack using proot_emb, considering batch
         for sent_idx in range(batch_size):
