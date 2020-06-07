@@ -139,6 +139,6 @@ def ucca_trans_outputs_into_mrp(outputs):
     ret_dict["edges"] = edges_info
 
     ###Top Nodes
-    ret_dict["tops"] = [projection_dict[top_node[0]]]
+    ret_dict["tops"] = [projection_dict[top_node[0]]] if len(projection_dict) > 0 else []
 
     return ret_dict

@@ -142,13 +142,19 @@ class TransitionParser(Model):
         losses = [[] for _ in range(batch_size)]
         edge_list = [[] for _ in range(batch_size)]
 
+        broken_indices = set()
+
         # push the tokens onto the buffer (tokens is in reverse order)
         for token_idx in range(max(sent_len)):
             for sent_idx in range(batch_size):
                 if sent_len[sent_idx] > token_idx:
-                    self.buffer.push(sent_idx,
-                                     input=embedded_text_input[sent_idx][sent_len[sent_idx] - 1 - token_idx],
-                                     extra={'token': sent_len[sent_idx] - token_idx})
+                    if sent_len[sent_idx] - 1 - token_idx < embedded_text_input.shape[1]:
+                        self.buffer.push(sent_idx,
+                                        input=embedded_text_input[sent_idx][sent_len[sent_idx] - 1 - token_idx],
+                                        extra={'token': sent_len[sent_idx] - token_idx})
+                    else:
+                        broken_indices.add(sent_idx)
+        print('Broken indices: ' + str(broken_indices))
 
         # init stack using proot_emb, considering batch
         for sent_idx in range(batch_size):
@@ -271,6 +277,10 @@ class TransitionParser(Model):
             'loss': _loss,
             'losses': losses,
         }
+
+        for idx in broken_indices:
+            edge_list[idx] = []
+
         if oracle_actions is None:
             ret['edge_list'] = edge_list
         return ret

@@ -206,13 +206,20 @@ class TransitionParser(Model):
         action_list = [[] for _ in range(batch_size)]
         ret_top_node = [[] for _ in range(batch_size)]
         ret_concept_node = [[] for _ in range(batch_size)]
+
+        broken_indices = set()
+
         # push the tokens onto the buffer (tokens is in reverse order)
         for token_idx in range(max(sent_len)):
             for sent_idx in range(batch_size):
                 if sent_len[sent_idx] > token_idx:
-                    self.buffer.push(sent_idx,
-                                     input=embedded_text_input[sent_idx][sent_len[sent_idx] - 1 - token_idx],
-                                     extra={'token': sent_len[sent_idx] - token_idx - 1})
+                    if sent_len[sent_idx] - 1 - token_idx < embedded_text_input.shape[1]:
+                        self.buffer.push(sent_idx,
+                                        input=embedded_text_input[sent_idx][sent_len[sent_idx] - 1 - token_idx],
+                                        extra={'token': sent_len[sent_idx] - token_idx - 1})
+                    else:
+                        broken_indices.add(sent_idx)
+        print('Broken indices: ' + str(broken_indices))
 
         # init stack using proot_emb, considering batch
         for sent_idx in range(batch_size):
@@ -435,6 +442,13 @@ class TransitionParser(Model):
         # extract concept node list in batchmode
         for sent_idx in range(batch_size):
             ret_concept_node[sent_idx] = concept_node[sent_idx]
+
+        for idx in broken_indices:
+            total_node_num[idx] = 0
+            edge_list[idx] = []
+            action_list[idx] = []
+            ret_top_node[idx] = [0]
+            ret_concept_node[idx] = []
 
         ret["total_node_num"] = total_node_num
 
